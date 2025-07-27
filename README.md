@@ -1,8 +1,8 @@
 # disaster-SMS
 
-This app delivers relevant information via SMS in an emergency scenario, particularly during power and/or internet outages. Why might this be useful? Typically, we are instructed to use radio (AM/FM and NOAA stations) as a source of information during a serious disaster. However, in many scenarios, cell phone towers may continue to work, albeit with spotty connectivity or network overload. In this case, you may text a friend for information. This app replaces the friend with a search-enabled LLM, immediately giving you a full picture of the situation, or answering your specific inquiry, condensed into an SMS-sized response.
+This app delivers relevant information via SMS in an emergency scenario, particularly for use when both power/internet and cellular data are down, but SMS is working. Why might this be useful? Typically, we are instructed to use radio (AM/FM and NOAA stations) as a source of information during a serious disaster. However, in many scenarios, cell phone towers may continue to work, albeit with spotty connectivity or network overload. In this case, you might text a friend for information. This app provides a very fast and reliable 'friend', a search-enabled LLM, immediately giving you relevant information, or answering a specific inquiry, condensed into an SMS-sized response. Besides web search results, data from additional APIs can be included, currently including National Weather Service alerts and forecast. 
 
-The app runs as a Docker stack intended to be kept alive on a Cloud VM at any reputable cloud provider which would, hopefully, be resilient in a disaster. Twilio is used for SMS.
+The app runs as a Docker stack intended to be kept alive on a cloud VM (e.g. OCI free tier) which would, hopefully, be resilient in a disaster. Twilio is used for SMS. 
 
 ## Requirements
 
@@ -28,8 +28,8 @@ The app runs as a Docker stack intended to be kept alive on a Cloud VM at any re
   - OpenAI API with web search
   - National Weather Service APIs (alerts and forecast)
 - Data is stored in Redis with a 1-day expiration, in case APIs go down.
-- LLM is used to summarize the data to MMS-size. The summary is tailored to the user's request and current emergency context.
-- The summary is sent via SMS using Twilio.
+- LLM is used to summarize the data concisely. The summary is tailored to the user's request and current emergency context.
+- The summary is sent via SMS/MMS using Twilio.
 - There is no database. Any further request must be initiated by the user again.
 - Errors are sent to the admin via email.
 - App health is monitored via healthcheck and optionally MQTT.
