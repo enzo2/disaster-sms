@@ -20,15 +20,19 @@ The app runs as a Docker stack intended to be kept alive on a Cloud VM at any re
 
 ## How It Works
 
-- The Flask app exposes `/sms_api`, protected by an authorization token.
-- API health is monitored via healthcheck
-- User sends an SMS optionally containing any context or requests.
-- Twilio forwards the SMS to the app API endpoint.
-- Incoming requests are authenticated and parsed for sender, subject, and message body.
+- The Flask app exposes `/sms_api`, accepting POST requests from Twilio. Incoming requests are validated.
+- User sends an SMS, optionally containing a specific location or question. 
+- Twilio forwards the SMS to the app API endpoint. 
 - The backend collects data from:
   - OpenAI API with web search
-  - National Weather Service APIs (alerts for specific locations)
-- Data is stored in Redis with a 1-week expiration, in case APIs go down.
-- LLM is used to condense the information, focusing on the user's request. The summary is tailored to the user's request and current emergency context.
-- The summary is sent via SMS.
+  - National Weather Service APIs (alerts and forecast)
+- Data is stored in Redis with a 1-day expiration, in case APIs go down.
+- LLM is used to summarize the data to MMS-size. The summary is tailored to the user's request and current emergency context.
+- The summary is sent via SMS using Twilio.
+- There is no database. Any further request must be initiated by the user again.
 - Errors are sent to the admin via email.
+- App health is monitored via healthcheck and optionally MQTT.
+
+## License
+
+This project is licensed under the Sustainable Use License, allowing for personal and non-commerical use. See the [LICENSE](LICENSE.md) file for details.
