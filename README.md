@@ -16,7 +16,8 @@ The app runs as a Docker stack intended to be kept alive on a Cloud VM at any re
 - **Configuration:** `.env` file used for configuration.
 - **Dependencies:** `uv` for Python package management.
 - Scripts can be run standalone for testing purposes (eg. `uv run data_collection.py`)
-- Optionally, configure your MQTT broker to receive healthchecks
+- The default docker compose setup includes labels for Traefik, and docker networks for Traefik and a tunnel to your MQTT broker. You can remove these if you use a different setup.
+- Optionally, configure your MQTT broker to receive healthchecks. To tunnel to your broker, establish a TCP tunnel container and add it to the `mqtt` docker network.
 
 ## How It Works
 

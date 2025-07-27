@@ -5,7 +5,7 @@ services:
       context: .
     depends_on:
       - redis
-    restart: unless-stopped
+    restart: always
     expose:
       - "8080/tcp" #inform traefik of the port to expose
     environment:
