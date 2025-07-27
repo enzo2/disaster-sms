@@ -1,0 +1,63 @@
+services:
+  main-app:
+    pull_policy: build
+    build: 
+      context: .
+    depends_on:
+      - redis
+    restart: unless-stopped
+    expose:
+      - "8080/tcp" #inform traefik of the port to expose
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      CLOUD_DOMAIN: ${CLOUD_DOMAIN}
+      SENDER_DOMAIN: ${SENDER_DOMAIN}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      RELAYHOST: ${RELAYHOST}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PWD: ${SMTP_PWD}
+      MQTT_BROKER: ${MQTT_BROKER}
+      MQTT_USER: ${MQTT_USER}
+      MQTT_PWD: ${MQTT_PWD}
+      MQTT_TOPIC: ${MQTT_TOPIC}
+      TWILIO_ACCOUNT_SID: ${TWILIO_ACCOUNT_SID}
+      TWILIO_AUTH_TOKEN: ${TWILIO_AUTH_TOKEN}
+      TWILIO_PHONE_NUMBER: ${TWILIO_PHONE_NUMBER}
+      LOG_LEVEL: ${LOG_LEVEL}
+      NWS_COUNTY_CODE: ${NWS_COUNTY_CODE}
+      LOCATION: ${LOCATION}
+    labels:
+      - com.centurylinklabs.watchtower.enable=false
+      - traefik.enable=true
+      - traefik.docker.network=reverse-proxy-public
+      - traefik.http.routers.disaster-sms-api.tls=true #use the default cert
+      - traefik.http.routers.disaster-sms-api.entrypoints=websecure #port 443
+      - traefik.http.routers.disaster-sms-api.rule=Host(`${CLOUD_DOMAIN}`) && PathPrefix(`/sms_api`)  #the url to proxy
+      - traefik.http.routers.disaster-sms-api.middlewares=sms-api-headers
+      - traefik.http.middlewares.sms-api-headers.headers.accesscontrolallowheaders=Authorization
+      - traefik.http.middlewares.sms-api-headers.headers.accesscontrolallowmethods=POST
+    networks:
+      - reverse-proxy-public
+      - mqtt
+      - default
+
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    
+#logging:
+#  driver: local
+#  options:
+#    max-size: 10m
+
+networks:
+  reverse-proxy-public:  #traefik network for reverse proxying between containers - publically exposed services
+    external: true  
+    name: "reverse-proxy-public"
+  mqtt: 
+    external: true 
+    name: "mqtt"  
+  default:  #this stack's private network

@@ -1,0 +1,23 @@
+#this is not a complete docker-compose, it contains overrides for the devcontainer
+services:
+  main-app:
+    # override the service's Dockerfile to one in the .devcontainer 
+    build:
+      context: ./
+      dockerfile: ./.devcontainer/Dockerfile
+    depends_on:
+      - redis 
+    volumes:
+      - ..:/workspaces:cached
+    networks:
+      - default
+
+    # Overrides default command so things don't shut down after the process ends.
+    #command: /bin/sh -c "while sleep 1000; do :; done"
+    command: sleep infinity 
+
+networks: 
+  reverse-proxy-public: 
+    external: false
+  mqtt:
+    external: false
