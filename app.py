@@ -38,7 +38,7 @@ app.wsgi_app = ReverseProxied(app.wsgi_app)
 @app.route('/health', methods=['GET'])
 def health_check():
     try:
-        logger.info("Health check received")
+        logger.debug("Health check received")
         if MQTT_TOPIC:
             publish_mqtt(MQTT_TOPIC, "ok")
         return jsonify({"status": "healthy"}), 200
