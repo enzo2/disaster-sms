@@ -48,7 +48,7 @@ def summarize_data(user_message=None):
             "content": str(prompt),
         }
       ],
-      model="gpt-4o-mini",
+      model="gpt-5-mini",
       max_tokens=400
     )
 

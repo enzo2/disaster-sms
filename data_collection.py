@@ -41,7 +41,7 @@ def get_disaster_news_from_openai(user_location, disaster_type="", user_message=
         logger.info(f"Prompt for OpenAI: {prompt}")
 
         response = OAIclient.chat.completions.create(
-            model="gpt-4o-mini-search-preview",
+            model="gpt-5-search-api",
             messages=[
                 {"role": "system", "content": "You are providing a response as part of the back end of an emergency SMS service."},
                 {"role": "user", "content": prompt}
