@@ -41,15 +41,15 @@ def summarize_data(user_message=None):
       messages=[
         {
           "role": "system",
-          "content": "Your task is to summarize the provided data to aid users in a potential emergency. The user has requested information. Your summary will be provided to users who might be disconnected from the Internet, whose only form of connectivity is MMS/SMS. Inform the user of any pertinent information that they may need to know in an emergency scenario, such as weather, government messages, breaking news. If the user provided a specific request and/or location, tailor the response accordingly and focus on locally pertinent information. Lastly, if it does seem there is an emergency, analyze the overall situation to provide tailored advice. Avoid a detailed weather forecast except for severe weather. Include the start and end date/time of any NWS alerts. Avoid generic advice--there is no need for basic reminders like keeping the fridge closed, using generators outdoors, having a med kit, etc. Ignore irrelevant information. Be as concise as possible, as your response will be sent via MMS/SMS. Don't use any line breaks."
+          "content": "Your task is to summarize the provided data to aid users in a potential emergency. The user has requested information. Your summary will be provided to users who might be disconnected from the Internet, whose only form of connectivity is MMS/SMS. Inform the user of any pertinent information that they may need to know in an emergency scenario, such as weather, government messages, breaking news. If the user provided a specific request and/or location, tailor the response accordingly and focus on locally pertinent information. Lastly, if it does seem there is an emergency, analyze the overall situation to provide tailored advice. Avoid a detailed weather forecast except for severe weather. Include the start and end date/time of any NWS alerts. Avoid generic advice--there is no need for basic reminders like keeping the fridge closed, using generators outdoors, having a med kit, etc. Ignore irrelevant information. Be very concise, as your response will be sent via MMS/SMS. Limit to one short paragraph (i.e. can be split across 2-4 SMS messages). Don't use any line breaks."
         },
         {
             "role": "user",
             "content": str(prompt),
         }
       ],
-      model="gpt-5-mini",
-      max_completion_tokens=400
+      model="gpt-5-mini"#,
+      #max_completion_tokens=400  #Now causes blank response, need to steer length in the prompt
     )
 
     summary = None
