@@ -49,7 +49,7 @@ def summarize_data(user_message=None):
         }
       ],
       model="gpt-5-mini",
-      max_tokens=400
+      max_completion_tokens=400
     )
 
     summary = None
