@@ -1,4 +1,5 @@
 import os
+import errno
 import email
 from email import policy
 import requests
@@ -24,6 +25,11 @@ MQTT_PWD = os.getenv('MQTT_PWD')
 def publish_mqtt(topic, message):
     try:
         publish.single(topic, message, retain=True, hostname=MQTT_BROKER, auth={'username': MQTT_USER, 'password': MQTT_PWD})
+    except OSError as e:
+        if e.errno == errno.EHOSTUNREACH:
+            logger.warning(f"MQTT Broker unreachable: {e}")
+        else:
+            logger.error(f"Failed to publish message to MQTT: {e}")
     except Exception as e:
         logger.error(f"Failed to publish message to MQTT: {e}")
 

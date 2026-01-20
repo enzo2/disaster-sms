@@ -53,15 +53,16 @@ def summarize_data(user_message=None):
     )
 
     summary = None
-    if (
-        hasattr(response, 'choices') and response.choices and
-        hasattr(response.choices[0], 'message') and response.choices[0].message and
-        hasattr(response.choices[0].message, 'content') and response.choices[0].message.content
-    ):
-        summary = response.choices[0].message.content.strip()
-        logger.info(f"Response summary: {summary}")
+    if response.choices and len(response.choices) > 0:
+        choice = response.choices[0]
+        if choice.message and choice.message.content:
+            summary = choice.message.content.strip()
+            logger.info(f"Response summary: {summary}")
+        else:
+            logger.warning(f"OpenAI returned no content. Finish reason: {choice.finish_reason}")
+            logger.debug(f"Full response: {response}")
     else:
-        logger.warning("OpenAI returned no content.")
+        logger.warning("OpenAI returned no choices.")
 
     if not summary:
         summary = "Could not retrieve a summary at this time."
